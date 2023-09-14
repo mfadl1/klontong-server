@@ -14,8 +14,9 @@ import {
   Product,
   ProductCrudService,
 } from "@brik/inventory-service";
+import { AuthQuery, API as AuthenticatorAPI } from "@brik/user-service";
 import ResponseDto, { ProductDTO } from "@/dtos/response.dto";
-import {AddProductDto} from "@/dtos/body.dto";
+import { AddProductDto } from "@/dtos/body.dto";
 import { Request } from "express";
 import { getProductQuery } from "@/dtos/query_params.dto";
 import { offsetCalculator } from "@/utils/util";
@@ -25,7 +26,9 @@ import { offsetCalculator } from "@/utils/util";
 export default class ProductController {
   constructor(
     @inject(InventoryAPI.ProductCrudService)
-    private productCrudService: ProductCrudService
+    private productCrudService: ProductCrudService,
+    @inject(AuthenticatorAPI.AuthQuery)
+    private authQuery: AuthQuery
   ) {}
 
   @Get()
@@ -33,6 +36,8 @@ export default class ProductController {
     @Req() req: Request,
     @QueryParams() queryParam: getProductQuery
   ) {
+    await this.authQuery.authMiddleware(req);
+
     const limit = queryParam.limit || 5;
     const currentPage = queryParam.page;
     const ctx = this.productCrudService.createQueryContext();
@@ -60,6 +65,8 @@ export default class ProductController {
 
   @Delete("/:id")
   async deleteProduct(@Req() req: Request, @Param("id") productId: number) {
+    await this.authQuery.authMiddleware(req);
+
     await this.productCrudService.delete(productId);
 
     return ResponseDto.success({});
@@ -67,6 +74,8 @@ export default class ProductController {
 
   @Post("/add")
   async addProduct(@Req() req: Request, @Body() body: AddProductDto) {
+    await this.authQuery.authMiddleware(req);
+    
     const params = body.createParams();
     const response = await this.productCrudService.create(params);
     const result = new ProductDTO(response);
