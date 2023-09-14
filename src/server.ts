@@ -1,15 +1,18 @@
 import path from "path";
 import App from "./app";
 import { logger } from "./utils/logger";
-import { DB_HOST, DB_NAME, DB_PASSWORD, DB_PORT, DB_USERNAME, INVENTORY_SCHEMA } from "./config";
+import { AUTHENTICATOR_SCHEMA, DB_HOST, DB_NAME, DB_PASSWORD, DB_PORT, DB_USERNAME, INVENTORY_SCHEMA, JWT_EXPIRES_IN, JWT_SECRET_KEY } from "./config";
 import { Container as DIContainer } from 'inversify';
 import glob from 'glob';
 import {
     API as InventoryAPI,
     MikroormDriver as InventoryMikroOrmDriver,
 } from '@brik/inventory-service';
+import {
+    API as AuthenticatorAPI,
+    MikroormDriver as AuthenticatorMikroOrmDriver,
+} from '@brik/user-service';
 
-console.log(path.join(__dirname + '/controllers/**/*.controller.{js,ts}'));
 const Container = new DIContainer({ defaultScope: 'Singleton' });
 // load all controllers
 glob(
@@ -34,6 +37,24 @@ glob(
             await inventoryMikroOrmDriver.init();
             Container.bind(InventoryAPI.ProductCrudService).toConstantValue(
                 inventoryMikroOrmDriver.get(InventoryAPI.ProductCrudService),
+            );
+
+            const authenticatorMikroOrmDriver = new AuthenticatorMikroOrmDriver(
+                {
+                    host: DB_HOST,
+                    port: Number(DB_PORT),
+                    db: DB_NAME,
+                    user: DB_USERNAME,
+                    password: DB_PASSWORD,
+                    schema: AUTHENTICATOR_SCHEMA,
+                },
+                JWT_SECRET_KEY,
+                JWT_EXPIRES_IN,
+            );
+
+            await authenticatorMikroOrmDriver.init();
+            Container.bind(AuthenticatorAPI.AuthQuery).toConstantValue(
+                authenticatorMikroOrmDriver.get(AuthenticatorAPI.AuthQuery),
             );
 
             controllers.forEach(controller => {

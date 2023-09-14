@@ -12,6 +12,7 @@ import {
 } from 'routing-controllers';
 import { CREDENTIALS, LOG_FORMAT, NODE_ENV, ORIGIN, PORT } from './config';
 import { logger, stream } from './utils/logger';
+import errorMiddleware from './middlewares/error.middleware';
 
 class App {
     public app: express.Application;
@@ -25,6 +26,7 @@ class App {
 
         this.initializeMiddlewares();
         this.initializeRoutes(Controllers, Container);
+        this.initializeErrorHandling();
     }
 
     public listen() {
@@ -38,6 +40,10 @@ class App {
 
     public getServer() {
         return this.app;
+    }
+
+    private initializeErrorHandling() {
+        this.app.use(errorMiddleware);
     }
 
     private initializeMiddlewares() {

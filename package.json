@@ -7,19 +7,22 @@
         "dev": "cross-env NODE_ENV=development nodemon",
         "build": "wireit",
         "build:tsc": "wireit",
-        "build:modules:inventory": "wireit"
+        "build:modules:inventory": "wireit",
+        "build:modules:user": "wireit"
     },
     "wireit": {
         "build": {
             "command": "swc src -d dist --source-maps --copy-files",
             "dependencies": [
-                "build:modules:inventory"
+                "build:modules:inventory",
+                "build:modules:user"
             ]
         },
         "build:tsc": {
             "command": "tsc && tsc-alias",
             "dependencies": [
-                "build:modules:inventory"
+                "build:modules:inventory",
+                "build:modules:user"
             ]
         },
         "build:modules:inventory": {
@@ -36,6 +39,20 @@
             "output": [
                 "modules/inventory/lib/**"
             ]
+        },
+        "build:modules:user": {
+            "command": "pnpm --filter @brik/user-service build",
+            "files": [
+                "modules/user/**/*.ts",
+                "modules/user/interface.ts",
+                "modules/user/user.module.ts",
+                "modules/user/user.shared.ts",
+                "modules/user/types.ts",
+                "modules/user/tsconfig.json"
+            ],
+            "output": [
+                "modules/user/lib/**"
+            ]
         }
     },
     "author": "",
@@ -46,7 +63,9 @@
     "homepage": "https://github.com/mfadl1/klontong-server#readme",
     "dependencies": {
         "@brik/inventory-service": "workspace:*",
+        "@brik/user-service": "workspace:*",
         "@types/mongoose": "^5.11.97",
+        "bcrypt": "^5.1.0",
         "class-transformer": "^0.5.1",
         "class-validator": "^0.14.0",
         "class-validator-jsonschema": "^5.0.0",
@@ -67,6 +86,7 @@
         "routing-controllers-openapi": "^4.0.0",
         "swc": "^1.0.11",
         "tslib": "^2.6.2",
+        "jsonwebtoken": "^8.5.1",
         "winston": "^3.10.0",
         "winston-daily-rotate-file": "^4.7.1",
         "wireit": "^0.14.0"

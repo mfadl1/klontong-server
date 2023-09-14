@@ -2,6 +2,15 @@ import { IsNumber, IsOptional, IsString } from "class-validator";
 import { Type } from 'class-transformer';
 
 
+export class AuthDto {
+    @IsString()
+    phone_number: string;
+
+    @IsString()
+    password: string;
+
+}
+
 export class ProductDetail {
     @IsOptional()
     @IsString()
@@ -49,4 +58,18 @@ export class AddProductDto {
             }
         };
     }
+}
+
+export class AddUserDto {
+    @IsString()
+    name: string;
+
+    @IsString()
+    email: string;
+
+    @IsString()
+    phone_number: string;
+
+    @IsString()
+    password: string;
 }
