@@ -11,8 +11,7 @@ import {
     useExpressServer,
 } from 'routing-controllers';
 import { CREDENTIALS, LOG_FORMAT, NODE_ENV, ORIGIN, PORT } from './config';
-import { stream } from 'winston';
-import { logger } from './utils/logger';
+import { logger, stream } from './utils/logger';
 
 class App {
     public app: express.Application;

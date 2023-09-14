@@ -45,6 +45,7 @@
     },
     "homepage": "https://github.com/mfadl1/klontong-server#readme",
     "dependencies": {
+        "@brik/inventory-service": "workspace:*",
         "@types/mongoose": "^5.11.97",
         "class-transformer": "^0.5.1",
         "class-validator": "^0.14.0",
@@ -56,7 +57,7 @@
         "dotenv": "^16.3.1",
         "express": "^4.18.2",
         "fs": "^0.0.1-security",
-        "glob": "^8.0.3",
+        "glob": "^7.2.3",
         "helmet": "^7.0.0",
         "hpp": "^0.2.3",
         "inversify": "^6.0.1",

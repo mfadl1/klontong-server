@@ -7,20 +7,20 @@ import glob from 'glob';
 import {
     API as InventoryAPI,
     MikroormDriver as InventoryMikroOrmDriver,
-} from '../modules/inventory-service';
+} from '@brik/inventory-service';
 
+console.log(path.join(__dirname + '/controllers/**/*.controller.{js,ts}'));
 const Container = new DIContainer({ defaultScope: 'Singleton' });
 // load all controllers
 glob(
     path.join(__dirname + '/controllers/**/*.controller.{js,ts}'),
     function (_, files) {
         Promise.all(
-            files.map((file: string) => {
+            files.map(file => {
                 return import(file.replace(__dirname, '.'));
             }),
         ).then(async controllers => {
             controllers = controllers.map(controller => controller.default);
-
 
             const inventoryMikroOrmDriver = new InventoryMikroOrmDriver({
                 host: DB_HOST,
@@ -39,6 +39,7 @@ glob(
             controllers.forEach(controller => {
                 Container.bind(controller).toSelf();
             });
+            
 
             Container.bind(App).toSelf();
             try {
