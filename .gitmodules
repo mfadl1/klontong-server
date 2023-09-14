@@ -1,0 +1,6 @@
+[submodule "modules/user-service"]
+	path = modules/user-service
+	url = https://github.com/mfadl1/user-service.git
+[submodule "modules/inventory-service"]
+	path = modules/inventory-service
+	url = https://github.com/mfadl1/inventory-service.git
