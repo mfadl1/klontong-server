@@ -2,9 +2,6 @@
 node_modules/
 dist/
 
-# env
-.env.development
-
 # Log files
 *.log
 src/logs/debug/

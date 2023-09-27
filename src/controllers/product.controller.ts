@@ -36,7 +36,7 @@ export default class ProductController {
     @Req() req: Request,
     @QueryParams() queryParam: getProductQuery
   ) {
-    await this.authQuery.authMiddleware(req);
+    // await this.authQuery.authMiddleware(req);
 
     const limit = queryParam.limit || 5;
     const currentPage = queryParam.page;
